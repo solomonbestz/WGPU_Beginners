@@ -1,7 +1,7 @@
 use glfw::{Action, Context, Key, Window, fail_on_errors};
 
 
-// Game state
+// Game state struct GameState {
 struct State<'a> {
     instance: wgpu::Instance,
     surface: wgpu::Surface<'a>,
