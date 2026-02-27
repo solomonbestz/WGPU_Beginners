@@ -12,6 +12,20 @@ struct State<'a> {
     window: &'a mut Window
 }
 
+impl<'a> State<'a>{
+    fn new(window: &'a mut Window) -> Self {
+        let size = window.get_size();
+
+        let instanceDescriptor = wgpu::InstanceDescriptor{
+            backends: wgpu::Backends::all(), ..Default::default()
+        };
+
+        let instance = wgpu::Instance::new(&instanceDescriptor);
+
+        let surface = instance.
+    }
+}
+
 fn main() {
     let mut glfw = glfw::init(fail_on_errors!()).unwrap();
 
