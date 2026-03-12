@@ -48,6 +48,24 @@ impl<'a> State<'a>{
         };
 
         let (device, queue) = adapter.request_device(&device_descriptor).await.unwrap();
+
+        let surface_capabilities = surface.get_capabilities(&adapter);
+        let surface_format = surface_capabilities.formats.iter()
+            .copied().filter(|f| f.is_srgb())
+            .next().unwrap_or(surface_capabilities.formats[0]);
+
+        let config = wgpu::SurfaceConfiguration{
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
+            format: surface_format,
+            width: size.0 as u32,
+            height: size.1 as u32,
+            present_mode: surface_capabilities.present_modes[0],
+            alpha_mode: surface_capabilities.alpha_modes[0],
+            view_formats: vec![],
+            desired_maximum_frame_latency: 2
+        };
+
+        
     }
 }
 
