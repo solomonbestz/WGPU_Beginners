@@ -1,4 +1,3 @@
-```markdown
 # WGPU Beginners – Rust GPU Rendering Setup
 
 ## Overview
