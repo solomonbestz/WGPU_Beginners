@@ -22,7 +22,15 @@ impl<'a> State<'a>{
 
         let instance = wgpu::Instance::new(&instanceDescriptor);
 
-        let surface = instance.
+        let target = unsafe {
+            wgpu::SurfaceTargetUnsafe::from_window(&window)
+        }.unwrap();
+
+        let surface = unsafe{
+            instance.create_surface_unsafe(target)
+        }.unwrap();
+        
+        
     }
 }
 
