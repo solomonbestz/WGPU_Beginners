@@ -13,14 +13,14 @@ struct State<'a> {
 }
 
 impl<'a> State<'a>{
-    fn new(window: &'a mut Window) -> Self {
+    async fn new(window: &'a mut Window) {
         let size = window.get_size();
 
-        let instanceDescriptor = wgpu::InstanceDescriptor{
+        let instance_descriptor = wgpu::InstanceDescriptor{
             backends: wgpu::Backends::all(), ..Default::default()
         };
 
-        let instance = wgpu::Instance::new(&instanceDescriptor);
+        let instance = wgpu::Instance::new(&instance_descriptor);
 
         let target = unsafe {
             wgpu::SurfaceTargetUnsafe::from_window(&window)
@@ -30,7 +30,24 @@ impl<'a> State<'a>{
             instance.create_surface_unsafe(target)
         }.unwrap();
         
-        
+        let adapter_descriptor = wgpu::RequestAdapterOptionsBase{
+            power_preference: wgpu::PowerPreference::default(),
+            compatible_surface: Some(&surface),
+            force_fallback_adapter: false,
+        };
+
+        let adapter = instance.request_adapter(&adapter_descriptor).await.unwrap();
+
+        let device_descriptor = wgpu::DeviceDescriptor {
+            required_features: wgpu::Features::empty(),
+            required_limits: wgpu::Limits::default(),
+            label: Some("Device"),
+            experimental_features: wgpu::ExperimentalFeatures::disabled(),
+            memory_hints: wgpu::MemoryHints::default(),
+            trace: wgpu::Trace::default(),
+        };
+
+        let (device, queue) = adapter.request_device(&device_descriptor).await.unwrap();
     }
 }
 
