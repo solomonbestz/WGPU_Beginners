@@ -77,6 +77,51 @@ impl<'a> State<'a>{
             size
         }
     }
+
+
+    fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
+        let drawable = self.surface.get_current_texture()?;
+        let image_view_descriptor = wgpu::TextureViewDescriptor::default();
+        let image_view = drawable.texture.create_view(&image_view_descriptor);
+
+        let command_encoder_descriptor = wgpu::CommandEncoderDescriptor{
+            label: Some("Render Encoder"),
+        };
+
+        let mut command_encoder = 
+            self.device.create_command_encoder(&command_encoder_descriptor);
+
+        let color_attachment = wgpu::RenderPassColorAttachment {
+            view: &image_view,
+            resolve_target: None,
+            ops: wgpu::Operations {
+                load: wgpu::LoadOp::Clear(wgpu::Color{
+                    r: 0.25,
+                    g: 0.0,
+                    b: 0.5,
+                    a: 0.0
+                }),
+                store: wgpu::StoreOp::Store,
+            },
+            depth_slice: None
+        };
+
+        let render_pass_descriptor = wgpu::RenderPassDescriptor{
+            label: Some("Renderpass"),
+            color_attachments: &[Some(color_attachment)],
+            depth_stencil_attachment: None,
+            occlusion_query_set: None,
+            timestamp_writes: None
+        };
+
+        command_encoder.begin_render_pass(&render_pass_descriptor);
+
+        self.queue.submit(std::iter::once(command_encoder.finish()));
+
+        drawable.present();
+        
+        Ok(())
+    }
 }
 
 fn main() {
