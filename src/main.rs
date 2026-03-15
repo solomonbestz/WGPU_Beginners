@@ -13,7 +13,7 @@ struct State<'a> {
 }
 
 impl<'a> State<'a>{
-    async fn new(window: &'a mut Window) {
+    async fn new(window: &'a mut Window) -> Self {
         let size = window.get_size();
 
         let instance_descriptor = wgpu::InstanceDescriptor{
@@ -65,7 +65,17 @@ impl<'a> State<'a>{
             desired_maximum_frame_latency: 2
         };
 
-        
+        surface.configure(&device, &config);
+
+        Self {
+            instance,
+            window,
+            surface,
+            device,
+            queue,
+            config,
+            size
+        }
     }
 }
 
