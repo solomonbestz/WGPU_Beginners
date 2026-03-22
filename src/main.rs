@@ -78,7 +78,6 @@ impl<'a> State<'a>{
         }
     }
 
-
     fn render(&mut self) -> Result<(), wgpu::SurfaceError> {
         let drawable = self.surface.get_current_texture()?;
         let image_view_descriptor = wgpu::TextureViewDescriptor::default();
@@ -121,6 +120,15 @@ impl<'a> State<'a>{
         drawable.present();
         
         Ok(())
+    }
+
+    fn resize(&mut self, new_size: (i32, i32)) {
+        if new_size.0 > 0 && new_size.1 > 0 {
+            self.size = new_size;
+            self.config.width = new_size.0 as u32;
+            self.config.height = new_size.1 as u32;
+            self.surface.configure(&self.device, &self.config);
+        }
     }
 }
 
