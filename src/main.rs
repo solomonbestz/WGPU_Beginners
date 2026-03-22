@@ -143,7 +143,7 @@ impl<'a> State<'a>{
 
 // Continue to work on the renderer function
 
-fn main() {
+fn run() {
     let mut glfw = glfw::init(fail_on_errors!()).unwrap();
 
     let (mut window, events) = glfw.create_window(800, 600, "WGPU Begineers", glfw::WindowMode::Windowed).unwrap();
@@ -168,4 +168,9 @@ fn main() {
         }
         window.swap_buffers();
     }
+}
+
+
+fn main(){
+    
 }
